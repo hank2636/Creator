@@ -1,0 +1,92 @@
+.header {
+  max-width: 1200px; /* 限制最大寬度 */
+  width: 100%;       /* 讓它能縮放 */
+  margin: 0 auto;    /* 水平置中 */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fefce8;
+  padding: 10px 30px;
+  font-family: Arial, sans-serif;
+  position: relative;
+  user-select: none;
+}
+
+.header-left .logo {
+  font-weight: bold;
+  font-size: 24px;
+  color: black;
+  cursor: pointer;
+}
+
+.header-center {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.nav-item {
+  position: relative;
+  color: black;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.nav-item:hover {
+  color: #555;
+}
+
+.dropdown {
+  user-select: none;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fefce8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-width: 150px;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 10;
+}
+
+.dropdown-menu.show {
+  display: flex;
+}
+
+.dropdown-item {
+  padding: 10px 15px;
+  color: black;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.dropdown-item:hover {
+  background-color: #e6e2b3;
+  color: black;
+}
+
+.header-right .btn-reserve {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 1px solid black;
+  transition: background-color 0.3s ease;
+}
+
+.header-right .btn-reserve:hover {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: 1px solid black;
+}
+
