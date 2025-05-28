@@ -1,12 +1,12 @@
 /* App.css */
 .app-container {
   min-height: 100vh;
-  background-color: #fefce8; /* 跟 Home 背景統一或自訂 */
+  background-color: #FAFAFA;
 }
 
 .main-content {
   max-width: 1200px; /* 最大寬度 */
   margin: 0 auto;    /* 水平置中 */
-  padding: 2rem 1rem; /* 內邊距，上下2rem，左右1rem */
+  padding: 0rem 1rem; /* 內邊距，上下2rem，左右1rem */
   box-sizing: border-box;
 }

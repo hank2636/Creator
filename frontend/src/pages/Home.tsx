@@ -4,6 +4,18 @@ import './home.css';
 
 const API_BACKEND_URL = import.meta.env.VITE_API_BACKEND_URL;
 const fallbackImage = `${API_BACKEND_URL}/static/picture/gallery.png`;
+const slidingImages = [
+  '/images/image1.jpg',
+  '/images/image2.jpg',
+  '/images/image3.jpg',
+  '/images/image4.jpg',
+  '/images/image5.jpg',
+  '/images/image6.jpg',
+  '/images/image7.jpg',
+  '/images/image8.jpg',
+  '/images/image9.jpg',
+];
+
 
 const Home = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -40,30 +52,27 @@ const Home = () => {
   return (
     <>
       <div className="slogan-banner">
-          捕捉光影的靈魂，記錄世界的詩意。
+        捕捉光影的靈魂，記錄世界的詩意。
       </div>
-      <div className="home-container">
-        <div className="section-title">光影形象誌</div>
 
-        {loading && <div>載入中...</div>}
-        {error && <div className="error-text">錯誤：{error}</div>}
-
-        <div className="gallery-grid">
-          {displayedImages.map((src, index) => {
-            const fullSrc = src.startsWith('http') ? src : `${API_BACKEND_URL}${src}`;
-            return (
-              <div className="gallery-item" key={index}>
-                <img
-                  src={fullSrc}
-                  alt={`Gallery ${index + 1}`}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = fallbackImage;
-                  }}
-                />
-              </div>
-            );
-          })}
+      <div className="banner-slider">
+        <div className="slider-track">
+          {slidingImages.map((img, idx) => (
+            <div className="slide" key={idx}>
+              <img src={img} alt={`Banner Slide ${idx + 1}`} />
+            </div>
+          ))}
+          {/* 為了無限循環，複製一遍圖片 */}
+          {slidingImages.map((img, idx) => (
+            <div className="slide" key={`clone-${idx}`}>
+              <img src={img} alt={`Banner Slide Clone ${idx + 1}`} />
+            </div>
+          ))}
         </div>
+      </div>
+
+      <div className="home-container">
+        {/* 你的內容 */}
       </div>
     </>
   );
