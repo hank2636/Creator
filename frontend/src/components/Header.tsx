@@ -1,17 +1,27 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './header.css';
 
 const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleReserve = () => {
+    navigate('/reserve');
+  };
+
+  const handleHome = () => {
+    navigate('/');
+  };
 
   return (
     <header className="header">
       <div className="header-left">
-        <div className="logo">乾靖娛樂工作室</div>
+        <div className="logo" onClick={handleHome} style={{ cursor: 'pointer' }}>乾靖娛樂工作室</div>
       </div>
 
       <nav className="header-center">
-        <a href="#" className="nav-item">首頁</a>
+        <a href="#" className="nav-item" onClick={(e) => { e.preventDefault(); handleHome(); }}>首頁</a>
 
         <div 
           className="nav-item dropdown" 
@@ -31,7 +41,7 @@ const Header = () => {
       </nav>
 
       <div className="header-right">
-        <button className="btn-reserve">立即預約</button>
+        <button className="btn-reserve" onClick={handleReserve}>立即預約</button>
       </div>
     </header>
   );
