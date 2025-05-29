@@ -15,6 +15,10 @@ from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing_extensions import Self
 
+import os
+from dotenv import load_dotenv
+env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.env"))
+load_dotenv(dotenv_path=env_path)
 
 def parse_cors(v: Any) -> list[str] | str:
     if isinstance(v, str) and not v.startswith("["):
@@ -28,7 +32,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         # pydantic_settings 會自動吃 env_file 路徑的 .env 檔
         # env_file="/home/omni/Cert_POC/.env",
-        env_file="/home/hank/fastapi-pro/backend/.env",
+        env_file="/home/hank/Creator/backend/.env",
         env_ignore_empty=True,  # 忽略空值
         extra="ignore",         # 忽略未在 model 中定義的變數
     )
@@ -38,7 +42,7 @@ class Settings(BaseSettings):
     # 60 minutes * 24 hours * 8 days = 8 days
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60*24*8
     # 前端 HOST
-    FRONTEND_HOST: str = "http://172.16.1.112:5173"
+    FRONTEND_HOST: str = "http://localhost:5173"
     BACKEND_HOST: str
     # 當前的環境, 預設為 local, 上正式之後就是 production
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
