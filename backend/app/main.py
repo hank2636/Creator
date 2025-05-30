@@ -22,7 +22,7 @@ if settings.all_cors_origins:
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 # 將圖片路徑一併納入服務中供前端取用
-img_path = "/home/hank/fastapi-pro/frontend/src/components/picture"
+img_path = "/home/hank/Creator/frontend/src/components/picture"
 app.mount("/static/picture", StaticFiles(directory=img_path), name="picture")
 
 # 啟動主程式
