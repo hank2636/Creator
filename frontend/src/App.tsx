@@ -2,7 +2,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./pages/Home";
-// import Reserve from "./pages/Reserve";
+// import BookingForm from "./pages/BookingForm";
+// import Contact from "./pages/Contact";
 import './App.css'; // 自己的 CSS 檔案
 
 const App = () => {
@@ -13,7 +14,8 @@ const App = () => {
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
-            {/* <Route path="/reserve" element={<Reserve />} /> */}
+            {/* <Route path="/booking" element={<BookingForm />} /> */}
+            {/* <Route path="/contact" element={<Contact />} /> */}
           </Routes>
             
         </main>

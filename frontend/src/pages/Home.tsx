@@ -1,9 +1,7 @@
 // src/pages/Home.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './home.css';
 
-const API_BACKEND_URL = import.meta.env.VITE_API_BACKEND_URL;
-const fallbackImage = `${API_BACKEND_URL}/static/picture/gallery.png`;
 const slidingImages = [
   '/images/image1.jpg',
   '/images/image2.jpg',
@@ -14,40 +12,118 @@ const slidingImages = [
   '/images/image7.jpg',
   '/images/image8.jpg',
   '/images/image9.jpg',
+  '/images/image10.jpg',
 ];
 
+const DUPLICATE_COUNT = 3; // 複製 3 次
 
 const Home = () => {
-  const [images, setImages] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | null>(null);
+  const speedRef = useRef(0);
+
+  // 複製三倍陣列
+  const extendedImages = [...slidingImages, ...slidingImages, ...slidingImages];
+
+  // 每張圖片寬度與 margin 合計
+  const ITEM_WIDTH = 472 + 10;
 
   useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const res = await fetch(`${API_BACKEND_URL}/api/picture/list`);
-        if (!res.ok) {
-          throw new Error(`API error: ${res.status}`);
-        }
-        const data = await res.json();
+  const container = sliderRef.current;
+  if (!container) return;
 
-        if (!Array.isArray(data)) {
-          throw new Error('API 回傳格式錯誤');
-        }
+  const middleScrollLeft = slidingImages.length * ITEM_WIDTH;
 
-        setImages(data);
-      } catch (err: any) {
-        console.error('載入圖片清單失敗:', err);
-        setError(err.message || '無法載入圖片');
-      } finally {
-        setLoading(false);
+  // 初始位置：中間
+  container.scrollLeft = middleScrollLeft;
+
+  // 滑動設定
+  const autoScrollDuration = 3000; // 滑動總時間 (ms)
+  const scrollDistance = 0.8 * autoScrollDuration; // 最終要滑多遠（px）
+
+  let startTime: number | null = null;
+  let enableMouseControl = false;
+
+  const speedRef = { current: 0 };
+
+  // 滑鼠事件
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!enableMouseControl) return;
+
+    const { left, width } = container.getBoundingClientRect();
+    const mouseX = e.clientX - left;
+    const center = width / 2;
+    const deadZone = width * 0.3;
+    const maxSpeed = 3;
+
+    if (Math.abs(mouseX - center) < deadZone / 2) {
+      speedRef.current = 0;
+    } else {
+      speedRef.current = (mouseX < center ? -1 : 1) * maxSpeed;
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (!enableMouseControl) return;
+
+    speedRef.current = 0;
+    container.scrollLeft = Math.round(container.scrollLeft);
+  };
+
+  const animateMouseControl = () => {
+    if (!enableMouseControl) return;
+
+    if (Math.abs(speedRef.current) < 0.5) {
+      speedRef.current = 0;
+    }
+
+    if (speedRef.current !== 0) {
+      container.scrollLeft += speedRef.current;
+
+      const maxScrollLeft = container.scrollWidth - container.clientWidth;
+      const leftBoundary = slidingImages.length * ITEM_WIDTH * 0.5;
+      const rightBoundary = maxScrollLeft - leftBoundary;
+
+      if (container.scrollLeft <= leftBoundary) {
+        container.scrollLeft += slidingImages.length * ITEM_WIDTH;
+      } else if (container.scrollLeft >= rightBoundary) {
+        container.scrollLeft -= slidingImages.length * ITEM_WIDTH;
       }
-    };
+    }
 
-    fetchImages();
-  }, []);
+    animationRef.current = requestAnimationFrame(animateMouseControl);
+  };
 
-  const displayedImages = images.length > 0 ? images : [fallbackImage];
+  // 自動滑動動畫，使用 ease-out 曲線
+  const animateAutoScroll = (timestamp: number) => {
+    if (!startTime) startTime = timestamp;
+    const elapsed = timestamp - startTime;
+
+    const t = Math.min(elapsed / autoScrollDuration, 1); // 正規化時間 (0~1)
+    const easeOutProgress = 1 - Math.pow(1 - t, 2); // ease-out 曲線
+
+    container.scrollLeft = middleScrollLeft + scrollDistance * easeOutProgress;
+
+    if (t < 1) {
+      animationRef.current = requestAnimationFrame(animateAutoScroll);
+    } else {
+      // 自動滑動完成，啟用滑鼠控制
+      enableMouseControl = true;
+      container.addEventListener('mousemove', handleMouseMove);
+      container.addEventListener('mouseleave', handleMouseLeave);
+      animationRef.current = requestAnimationFrame(animateMouseControl);
+    }
+  };
+
+  animationRef.current = requestAnimationFrame(animateAutoScroll);
+
+  return () => {
+    container.removeEventListener('mousemove', handleMouseMove);
+    container.removeEventListener('mouseleave', handleMouseLeave);
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
+  };
+}, []);
+
 
   return (
     <>
@@ -55,24 +131,24 @@ const Home = () => {
         捕捉光影的靈魂，記錄世界的詩意。
       </div>
 
-      <div className="banner-slider">
-        <div className="slider-track">
-          {slidingImages.map((img, idx) => (
-            <div className="slide" key={idx}>
-              <img src={img} alt={`Banner Slide ${idx + 1}`} />
-            </div>
-          ))}
-          {/* 為了無限循環，複製一遍圖片 */}
-          {slidingImages.map((img, idx) => (
-            <div className="slide" key={`clone-${idx}`}>
-              <img src={img} alt={`Banner Slide Clone ${idx + 1}`} />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="home-container">
-        {/* 你的內容 */}
+      <div
+        className="mouse-slider"
+        ref={sliderRef}
+        style={{ overflowX: 'auto', whiteSpace: 'nowrap', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {extendedImages.map((img, idx) => (
+          <div
+            className="mouse-slide"
+            key={idx}
+            style={{ display: 'inline-block', width: 472, marginRight: 10 }}
+          >
+            <img
+              src={img}
+              alt={`Slide ${idx + 1}`}
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+            />
+          </div>
+        ))}
       </div>
     </>
   );
