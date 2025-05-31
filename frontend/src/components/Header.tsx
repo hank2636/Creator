@@ -67,7 +67,13 @@ const Header: React.FC = () => {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            <div className={`nav-item dropdown ${isPortfolioActive ? 'active' : ''}`}>
+            <div
+              className={`nav-item dropdown ${isPortfolioActive ? 'active' : ''}`}
+              onClick={() => {
+                navigate('/#image');
+                setDropdownOpen(false);
+              }}
+            >
               作品集
             </div>
             {dropdownOpen && (
@@ -76,10 +82,42 @@ const Header: React.FC = () => {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
-                <a href="/portfolio/image" className="dropdown-item">光影形象誌</a>
-                <a href="/portfolio/photo" className="dropdown-item">光影寫真</a>
-                <a href="/portfolio/theme" className="dropdown-item">主題寫真</a>
-                <a href="/portfolio/outdoor" className="dropdown-item">外拍作品</a>
+                <div
+                  className="dropdown-item"
+                  onClick={() => {
+                    navigate('/#image');
+                    setDropdownOpen(false);
+                  }}
+                >
+                  形象照
+                </div>
+                <div
+                  className="dropdown-item"
+                  onClick={() => {
+                    navigate('/#photo');
+                    setDropdownOpen(false);
+                  }}
+                >
+                  光影寫真
+                </div>
+                <div
+                  className="dropdown-item"
+                  onClick={() => {
+                    navigate('/#theme');
+                    setDropdownOpen(false);
+                  }}
+                >
+                  主題寫真
+                </div>
+                <div
+                  className="dropdown-item"
+                  onClick={() => {
+                    navigate('/#outdoor');
+                    setDropdownOpen(false);
+                  }}
+                >
+                  外拍作品
+                </div>
               </div>
             )}
           </div>
