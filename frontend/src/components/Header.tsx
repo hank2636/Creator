@@ -14,6 +14,9 @@ const Header: React.FC = () => {
 
   const handleHome = () => {
     navigate('/');
+    setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // 平滑捲動
+  }, 100);
   };
 
   const handleContact = () => {
