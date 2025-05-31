@@ -20,6 +20,10 @@ const Header: React.FC = () => {
     navigate('/contact');
   };
 
+  const handlePlane = () => {
+    navigate('/plane');
+  };
+
   const isPortfolioActive = location.pathname.startsWith('/portfolio');
 
   // 當滑鼠進入時，立即顯示下拉選單並清除任何關閉計時器
@@ -79,6 +83,17 @@ const Header: React.FC = () => {
               </div>
             )}
           </div>
+          
+          <a
+            href="#"
+            className={`nav-item ${location.pathname === '/plans' ? 'active' : ''}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handlePlane();
+            }}
+          >
+            了解方案
+          </a>
 
           <a
             href="#"
