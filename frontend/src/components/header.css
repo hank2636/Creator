@@ -1,16 +1,25 @@
 /* ========== Header Layout ========== */
+/* 外層固定在最上方，佔滿全寬 */
+.header-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #FAFAFA;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  user-select: none;
+}
+
+/* 內層內容寬度限制 + 置中 */
 .header {
   max-width: 1200px;
-  width: 100%;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #FAFAFA;
   padding: 13px 30px;
   font-family: Arial, sans-serif;
-  position: relative;
-  user-select: none;
 }
 
 /* ========== Logo ========== */

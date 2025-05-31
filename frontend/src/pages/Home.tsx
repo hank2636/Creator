@@ -1,5 +1,4 @@
-// src/pages/Home.tsx
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import './home.css';
 import { useAutoScrollSlider } from '../hooks/useAutoScrollSlider';
 
@@ -22,12 +21,13 @@ const ITEM_WIDTH = 472 + 10;
 const Home = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null); // ← 新增狀態控制放大圖
 
   const extendedImages = Array(DUPLICATE_COUNT)
     .fill(slidingImages)
     .flat();
 
-  // 使用 Hook
+  // 自動滑動 Hook
   useAutoScrollSlider(sliderRef, slidingImages, ITEM_WIDTH, animationRef);
 
   return (
@@ -60,6 +60,28 @@ const Home = () => {
           </div>
         ))}
       </div>
+
+      <hr style={{ margin: '40px auto', width: '80%', borderColor: '#ddd' }} />
+
+      {/* 圖片格狀牆 */}
+      <div className="grid-gallery">
+        {slidingImages.map((img, idx) => (
+          <div className="grid-item" key={`grid-${idx}`}>
+            <img
+              src={img}
+              alt={`Grid ${idx + 1}`}
+              onClick={() => setLightboxImage(img)} // 點擊放大
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* 放大圖層 Lightbox */}
+      {lightboxImage && (
+        <div className="lightbox-overlay" onClick={() => setLightboxImage(null)}>
+          <img src={lightboxImage} className="lightbox-image" alt="預覽圖片" />
+        </div>
+      )}
     </>
   );
 };

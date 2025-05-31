@@ -38,64 +38,66 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="header">
-      <div className="header-left">
-        <div className="logo" onClick={handleHome}>
-          乾靖娛樂工作室
-        </div>
-      </div>
-
-      <nav className="header-center">
-        <a
-          href="#"
-          className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}
-          onClick={(e) => {
-            e.preventDefault();
-            handleHome();
-          }}
-        >
-          首頁
-        </a>
-
-        <div
-          className="dropdown-wrapper"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <div className={`nav-item dropdown ${isPortfolioActive ? 'active' : ''}`}>
-            作品集
+    <header className="header-wrapper">
+      <div  className="header">
+        <div className="header-left">
+          <div className="logo" onClick={handleHome}>
+            乾靖娛樂工作室
           </div>
-          {dropdownOpen && (
-            <div
-              className="dropdown-menu show"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <a href="/portfolio/image" className="dropdown-item">光影形象誌</a>
-              <a href="/portfolio/photo" className="dropdown-item">光影寫真</a>
-              <a href="/portfolio/theme" className="dropdown-item">主題寫真</a>
-              <a href="/portfolio/outdoor" className="dropdown-item">外拍作品</a>
-            </div>
-          )}
         </div>
 
-        <a
-          href="#"
-          className={`nav-item ${location.pathname === '/contact' ? 'active' : ''}`}
-          onClick={(e) => {
-            e.preventDefault();
-            handleContact();
-          }}
-        >
-          聯絡我們
-        </a>
-      </nav>
+        <nav className="header-center">
+          <a
+            href="#"
+            className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleHome();
+            }}
+          >
+            首頁
+          </a>
 
-      <div className="header-right">
-        <button className="btn-reserve" onClick={handleReserve}>
-          立即預約
-        </button>
-      </div>
+          <div
+            className="dropdown-wrapper"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div className={`nav-item dropdown ${isPortfolioActive ? 'active' : ''}`}>
+              作品集
+            </div>
+            {dropdownOpen && (
+              <div
+                className="dropdown-menu show"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <a href="/portfolio/image" className="dropdown-item">光影形象誌</a>
+                <a href="/portfolio/photo" className="dropdown-item">光影寫真</a>
+                <a href="/portfolio/theme" className="dropdown-item">主題寫真</a>
+                <a href="/portfolio/outdoor" className="dropdown-item">外拍作品</a>
+              </div>
+            )}
+          </div>
+
+          <a
+            href="#"
+            className={`nav-item ${location.pathname === '/contact' ? 'active' : ''}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleContact();
+            }}
+          >
+            聯絡我們
+          </a>
+        </nav>
+
+        <div className="header-right">
+          <button className="btn-reserve" onClick={handleReserve}>
+            立即預約
+          </button>
+        </div>
+      </div >
     </header>
   );
 };
