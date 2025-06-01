@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './home.css';
 import { startAutoScrollSlider } from '../hooks/useAutoScrollSlider';
