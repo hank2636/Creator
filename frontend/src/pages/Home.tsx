@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './home.css';
-import { useAutoScrollSlider } from '../hooks/useAutoScrollSlider';
+import { startAutoScrollSlider } from '../hooks/useAutoScrollSlider';
 
 const slidingImages = [
   '/images/image1.jpg',
@@ -15,17 +15,16 @@ const slidingImages = [
   '/images/image9.jpg',
   '/images/image10.jpg',
 ];
+
 const DUPLICATE_COUNT = 3;
 const ITEM_WIDTH = 472 + 10;
 
 const Home = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
+  const cleanupRef = useRef<(() => void) | null>(null); // cleanup function for animation
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const navigate = useNavigate();
-  const handleReserve = () => {
-    navigate('/reserve');
-  };
   const location = useLocation();
 
   useEffect(() => {
@@ -35,16 +34,36 @@ const Home = () => {
       if (target) {
         setTimeout(() => {
           target.scrollIntoView({ behavior: 'smooth' });
-        }, 100); // 延遲確保元素已渲染
+        }, 100);
       }
     }
   }, [location]);
 
-  const extendedImages = Array(DUPLICATE_COUNT)
-    .fill(slidingImages)
-    .flat();
-    
-  useAutoScrollSlider(sliderRef, slidingImages, ITEM_WIDTH, animationRef);
+  const extendedImages = Array(DUPLICATE_COUNT).fill(slidingImages).flat();
+
+  useEffect(() => {
+    const container = sliderRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          // 每次進入可視區域就重啟動畫
+          if (cleanupRef.current) cleanupRef.current(); // 清除前一次的動畫
+          cleanupRef.current = startAutoScrollSlider(container, slidingImages, ITEM_WIDTH, animationRef);
+        }
+      },
+      { threshold: 0.8 } // 超過 80% 出現在畫面才觸發
+    );
+
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+      if (cleanupRef.current) cleanupRef.current();
+    };
+  }, []);
 
   return (
     <>
@@ -52,7 +71,7 @@ const Home = () => {
         <div className="slogan-content">
           <h1>捕捉光影的靈魂，記錄世界的詩意。</h1>
           <p>專業外拍、光影寫真、形象攝影</p>
-          <button onClick={handleReserve}>立即預約</button>
+          <button onClick={() => navigate('/reserve')}>立即預約</button>
         </div>
       </div>
 
@@ -82,7 +101,7 @@ const Home = () => {
         ))}
       </div>
 
-      {/* 分類：光影形象誌 */}
+      {/* 各分類照片區塊 */}
       <div id="image" className="gallery-section">
         <h2 className="gallery-title">形象照</h2>
         <div className="grid-gallery">
@@ -94,7 +113,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 分類：光影寫真 */}
       <div id="photo" className="gallery-section">
         <h2 className="gallery-title">光影寫真</h2>
         <div className="grid-gallery">
@@ -106,7 +124,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 分類：主題寫真 */}
       <div id="theme" className="gallery-section">
         <h2 className="gallery-title">主題寫真</h2>
         <div className="grid-gallery">
@@ -118,7 +135,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 分類：外拍作品 */}
       <div id="outdoor" className="gallery-section">
         <h2 className="gallery-title">外拍作品</h2>
         <div className="grid-gallery">

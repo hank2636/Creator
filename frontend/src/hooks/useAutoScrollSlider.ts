@@ -1,99 +1,92 @@
 // hooks/useAutoScrollSlider.ts
-import { useEffect, useRef } from "react";
+import type { RefObject } from 'react';
 
-export function useAutoScrollSlider(
-  sliderRef: React.RefObject<HTMLDivElement | null>,
+export function startAutoScrollSlider(
+  container: HTMLDivElement,
   slidingImages: any[],
   ITEM_WIDTH: number,
-  animationRef: React.MutableRefObject<number | null>
-){
-  useEffect(() => {
-    const container = sliderRef.current;
-    if (!container) return;
+  animationRef: RefObject<number | null>
+) {
+  const autoScrollDuration = 3000;
+  const scrollDistance = 0.4 * autoScrollDuration;
 
-    const middleScrollLeft = slidingImages.length * ITEM_WIDTH;
-    container.scrollLeft = middleScrollLeft;
+  let startTime: number | null = null;
+  let enableMouseControl = false;
 
-    const autoScrollDuration = 3000;
-    const scrollDistance = 0.8 * autoScrollDuration;
+  const speedRef = { current: 0 };
 
-    let startTime: number | null = null;
-    let enableMouseControl = false;
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!enableMouseControl) return;
 
-    const speedRef = { current: 0 };
+    const { left, width } = container.getBoundingClientRect();
+    const mouseX = e.clientX - left;
+    const center = width / 2;
+    const deadZone = width * 0.3;
+    const maxSpeed = 3;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!enableMouseControl) return;
-
-      const { left, width } = container.getBoundingClientRect();
-      const mouseX = e.clientX - left;
-      const center = width / 2;
-      const deadZone = width * 0.3;
-      const maxSpeed = 3;
-
-      if (Math.abs(mouseX - center) < deadZone / 2) {
-        speedRef.current = 0;
-      } else {
-        speedRef.current = (mouseX < center ? -1 : 1) * maxSpeed;
-      }
-    };
-
-    const handleMouseLeave = () => {
-      if (!enableMouseControl) return;
-
+    if (Math.abs(mouseX - center) < deadZone / 2) {
       speedRef.current = 0;
-      container.scrollLeft = Math.round(container.scrollLeft);
-    };
+    } else {
+      speedRef.current = (mouseX < center ? -1 : 1) * maxSpeed;
+    }
+  };
 
-    const animateMouseControl = () => {
-      if (!enableMouseControl) return;
+  const handleMouseLeave = () => {
+    if (!enableMouseControl) return;
+    speedRef.current = 0;
+    container.scrollLeft = Math.round(container.scrollLeft);
+  };
 
-      if (Math.abs(speedRef.current) < 0.5) {
-        speedRef.current = 0;
+  const animateMouseControl = () => {
+    if (!enableMouseControl) return;
+
+    if (Math.abs(speedRef.current) < 0.5) {
+      speedRef.current = 0;
+    }
+
+    if (speedRef.current !== 0) {
+      container.scrollLeft += speedRef.current;
+
+      const maxScrollLeft = container.scrollWidth - container.clientWidth;
+      const leftBoundary = slidingImages.length * ITEM_WIDTH * 0.5;
+      const rightBoundary = maxScrollLeft - leftBoundary;
+
+      if (container.scrollLeft <= leftBoundary) {
+        container.scrollLeft += slidingImages.length * ITEM_WIDTH;
+      } else if (container.scrollLeft >= rightBoundary) {
+        container.scrollLeft -= slidingImages.length * ITEM_WIDTH;
       }
+    }
 
-      if (speedRef.current !== 0) {
-        container.scrollLeft += speedRef.current;
+    animationRef.current = requestAnimationFrame(animateMouseControl);
+  };
 
-        const maxScrollLeft = container.scrollWidth - container.clientWidth;
-        const leftBoundary = slidingImages.length * ITEM_WIDTH * 0.5;
-        const rightBoundary = maxScrollLeft - leftBoundary;
+  const initialScrollLeft = container.scrollLeft; // ⭐️ 儲存目前位置
 
-        if (container.scrollLeft <= leftBoundary) {
-          container.scrollLeft += slidingImages.length * ITEM_WIDTH;
-        } else if (container.scrollLeft >= rightBoundary) {
-          container.scrollLeft -= slidingImages.length * ITEM_WIDTH;
-        }
-      }
+  const animateAutoScroll = (timestamp: number) => {
+    if (!startTime) startTime = timestamp;
+    const elapsed = timestamp - startTime;
 
+    const t = Math.min(elapsed / autoScrollDuration, 1);
+    const easeOutProgress = 1 - Math.pow(1 - t, 2);
+
+    container.scrollLeft = initialScrollLeft + scrollDistance * easeOutProgress;
+
+    if (t < 1) {
+      animationRef.current = requestAnimationFrame(animateAutoScroll);
+    } else {
+      enableMouseControl = true;
+      container.addEventListener("mousemove", handleMouseMove);
+      container.addEventListener("mouseleave", handleMouseLeave);
       animationRef.current = requestAnimationFrame(animateMouseControl);
-    };
+    }
+  };
 
-    const animateAutoScroll = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const elapsed = timestamp - startTime;
+  animationRef.current = requestAnimationFrame(animateAutoScroll);
 
-      const t = Math.min(elapsed / autoScrollDuration, 1);
-      const easeOutProgress = 1 - Math.pow(1 - t, 2);
-
-      container.scrollLeft = middleScrollLeft + scrollDistance * easeOutProgress;
-
-      if (t < 1) {
-        animationRef.current = requestAnimationFrame(animateAutoScroll);
-      } else {
-        enableMouseControl = true;
-        container.addEventListener("mousemove", handleMouseMove);
-        container.addEventListener("mouseleave", handleMouseLeave);
-        animationRef.current = requestAnimationFrame(animateMouseControl);
-      }
-    };
-
-    animationRef.current = requestAnimationFrame(animateAutoScroll);
-
-    return () => {
-      container.removeEventListener("mousemove", handleMouseMove);
-      container.removeEventListener("mouseleave", handleMouseLeave);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, [sliderRef, slidingImages, ITEM_WIDTH, animationRef]);
+  return () => {
+    container.removeEventListener("mousemove", handleMouseMove);
+    container.removeEventListener("mouseleave", handleMouseLeave);
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
+  };
 }
