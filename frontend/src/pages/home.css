@@ -12,7 +12,7 @@
   height: 72vh; /* 高度改為整頁高度 */
   margin-left: calc(-50vw + 43.9%);
   background-color: #000;
-  color: #ffd60a;
+  color: #fffddd;
   display: flex;
   align-items: center; /* 垂直置中 */
   justify-content: flex-start; /* 左對齊 */
@@ -44,12 +44,20 @@
   padding: 0.8rem 1.5rem;
   font-size: 1.2rem;
   font-weight: bold;
-  background-color: #ffd60a;
-  color: #000;
+  background: linear-gradient(90deg, #ff6ec4, #7873f5, #4de1ff, #ffd60a);
+  color: #fff;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 3rem;
   cursor: pointer;
   margin-top: 1rem;
+  background-size: 300% 300%;
+  transition: background-position 0.5s ease, color 0.5s ease, transform 0.3s ease;
+}
+
+.slogan-content button:hover {
+  background-position: right center;
+  color: #000000;
+  transform: scale(1.05); /* 微放大 */
 }
 
 /* 背景層 */

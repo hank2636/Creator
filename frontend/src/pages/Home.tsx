@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './home.css';
 import { useAutoScrollSlider } from '../hooks/useAutoScrollSlider';
 
@@ -22,7 +22,10 @@ const Home = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
-
+  const navigate = useNavigate();
+  const handleReserve = () => {
+    navigate('/reserve');
+  };
   const location = useLocation();
 
   useEffect(() => {
@@ -49,7 +52,7 @@ const Home = () => {
         <div className="slogan-content">
           <h1>捕捉光影的靈魂，記錄世界的詩意。</h1>
           <p>專業外拍、光影寫真、形象攝影</p>
-          <button>立即預約</button>
+          <button onClick={handleReserve}>立即預約</button>
         </div>
       </div>
 
