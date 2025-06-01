@@ -687,7 +687,7 @@ const BookingForm: React.FC = () => {
           <div className="form-group">
             <label>取消／延期政策</label>
             <div className="policy-container">
-              <div className="policy-content">
+              <div className="policy-content" onScroll={handlePolicyScroll}>
                 <h4>取消政策</h4>
                 <ul>
                   <li>拍攝日前 7 天以上取消：全額退還訂金</li>
