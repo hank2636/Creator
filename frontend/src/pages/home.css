@@ -8,16 +8,48 @@
 
 .slogan-banner {
   position: relative;
-  width: 100vw;
+  width: 90vw;
+  height: 72vh; /* 高度改為整頁高度 */
   margin-left: calc(-50vw + 43.9%);
-  margin-top: 70px;
-  background-color: #000; 
-  color: #ffd60a; 
-  text-align: center;
-  padding: 2rem 3rem 2rem 4rem;
-  font-size: 1.5rem;
+  background-color: #000;
+  color: #ffd60a;
+  display: flex;
+  align-items: center; /* 垂直置中 */
+  justify-content: flex-start; /* 左對齊 */
+  padding: 8rem; /* 全部方向都加 padding */
+  font-size: 3rem; /* 放大字體 */
   font-weight: bold;
   overflow: hidden;
+  text-align: left; /* 文字靠左 */
+}
+
+
+.slogan-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;    /* 所有內容靠左 */
+  padding: 4rem 8rem;         /* 控制與左邊和上下的距離 */
+  font-size: 2.5rem;
+  font-weight: bold;
+  z-index: 1;
+}
+
+.slogan-content p {
+  margin: 1rem 0;
+  font-size: 1.5rem;
+  font-weight: normal;
+}
+
+.slogan-content button {
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: #ffd60a;
+  color: #000;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-top: 1rem;
 }
 
 /* 背景層 */
@@ -28,19 +60,14 @@
   background-image: url('/banner/banner.jpg');
   background-size: cover;
   background-position: center 55%;
-  filter: blur(1px); /* 虛化效果 */
-  opacity: 0.4; /* 調整透明度 */
+  filter: blur(1px);
+  opacity: 0.4;
   z-index: 0;
 }
 
-/* 讓文字內容置於背景上層 */
-.slogan-banner > * {
-  position: relative;
-  z-index: 1;
-}
 
 .mouse-slider {
-  width: 100vw;
+  width: 98.55vw;
   margin-left: calc(-50vw + 50%);
   padding: 10px;
   overflow-x: auto;

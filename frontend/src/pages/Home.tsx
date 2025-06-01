@@ -46,7 +46,11 @@ const Home = () => {
   return (
     <>
       <div className="slogan-banner">
-        捕捉光影的靈魂，記錄世界的詩意。
+        <div className="slogan-content">
+          <h1>捕捉光影的靈魂，記錄世界的詩意。</h1>
+          <p>專業外拍、光影寫真、形象攝影</p>
+          <button>立即預約</button>
+        </div>
       </div>
 
       {/* 輪播圖 */}
