@@ -39,7 +39,7 @@ const Header: React.FC = () => {
 
   // 當滑鼠離開時，延遲 200ms 關閉下拉選單
   const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
+    timeoutRef.current = window.setTimeout(() => {
       setDropdownOpen(false);
     }, 200);
   };
