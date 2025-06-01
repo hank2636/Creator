@@ -9,7 +9,7 @@ const Header: React.FC = () => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleReserve = () => {
-    navigate('/reserve');
+    navigate('/booking');
   };
 
   const handleHome = () => {
