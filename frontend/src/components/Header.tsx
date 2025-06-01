@@ -125,7 +125,7 @@ const Header: React.FC = () => {
             )}
           </div>
           
-          {/* <a
+          <a
             href="#"
             className={`nav-item ${location.pathname === '/plans' ? 'active' : ''}`}
             onClick={(e) => {
@@ -134,7 +134,7 @@ const Header: React.FC = () => {
             }}
           >
             了解方案
-          </a> */}
+          </a>
 
           <a
             href="#"
