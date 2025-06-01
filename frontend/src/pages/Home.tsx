@@ -75,8 +75,6 @@ const Home = () => {
         ))}
       </div>
 
-      <hr />
-
       {/* 分類：光影形象誌 */}
       <div id="image" className="gallery-section">
         <h2 className="gallery-title">形象照</h2>

@@ -42,6 +42,7 @@
 .mouse-slider {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
+  padding: 10px;
   overflow-x: auto;
   white-space: nowrap;
   scrollbar-width: none; /* Firefox */
